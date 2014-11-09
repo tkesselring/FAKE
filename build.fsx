@@ -211,10 +211,10 @@ Target "CreateNuGet" (fun _ ->
                      else p.Dependencies) 
                 AccessKey = getBuildParamOrDefault "nugetkey" ""
                 Publish = hasBuildParam "nugetkey" }
-        
-        NuGet (setParams >> x64ify) "fake.nuspec"
+
+        NuGet setParams "fake.nuspec"
         !! (nugetToolsDir @@ "FAKE.exe") |> set32BitCorFlags
-        NuGet setParams "fake.nuspec"        
+        NuGet (setParams >> x64ify) "fake.nuspec"
 )
 
 Target "ReleaseDocs" (fun _ ->
