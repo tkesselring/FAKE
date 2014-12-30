@@ -159,13 +159,13 @@ Target "SourceLink" (fun _ ->
 )
 
 Target "CreateNuGet" (fun _ ->
-    let set32BitCorFlags files =
+    let set64BitCorFlags files =
         files
         |> Seq.iter (fun file -> 
             let args =
                 { Program = "lib" @@ "corflags.exe"
                   WorkingDirectory = directory file
-                  CommandLine = "/32BIT- /32BITPREF- " + quoteIfNeeded file
+                  CommandLine = "/32BIT- /32BITPREF- " + quoteIfNeeded file // remove 32-bit corflags
                   Args = [] }
             printfn "%A" args
             shellExec args |> ignore)
@@ -213,7 +213,7 @@ Target "CreateNuGet" (fun _ ->
                 Publish = hasBuildParam "nugetkey" }
 
         NuGet setParams "fake.nuspec"
-        !! (nugetToolsDir @@ "FAKE.exe") |> set32BitCorFlags
+        !! (nugetToolsDir @@ "FAKE.exe") |> set64BitCorFlags
         NuGet (setParams >> x64ify) "fake.nuspec"
 )
 
